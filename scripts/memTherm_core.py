@@ -103,6 +103,7 @@ c_hotspot_config_file      =   hotspot_config_path + sim.config.get('hotspot/hot
 hotspot_floorplan_folder   = hotspot_config_path + sim.config.get('hotspot/floorplan_folder')
 hotspot_layer_file  =   hotspot_config_path + sim.config.get('hotspot/layer_file_mem')
 c_hotspot_layer_file  =   hotspot_config_path + sim.config.get('hotspot/layer_file_core')
+RC_model_file = hotspot_config_path + sim.config.get('hotspot/rc_model')
 
 # Output Parameters for hotspot simulation
 combined_temperature_trace_file = sim.config.get('hotspot/log_files/combined_temperature_trace_file')
@@ -521,6 +522,8 @@ class memTherm:
     first_run = (sum(1 for linee in open(combined_temperature_trace_file, 'r')) == 1) 
     if (init_file_external!= "None") or (not first_run):
         hcmd += ' -init_file ' + init_file
+    if(first_run)
+        hcmd += ' -t ' + RC_model_file
     os.system(hcmd)
     self.format_trace_file(True, c_temperature_trace_file, temperature_trace_file, combined_temperature_trace_file, combined_insttemperature_trace_file)
     self.format_trace_file(True, c_power_trace_file, power_trace_file, combined_power_trace_file, combined_instpower_trace_file)

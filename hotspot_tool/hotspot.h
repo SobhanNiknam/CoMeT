@@ -21,6 +21,9 @@ typedef struct global_config_t_st
 	/*BU_3D: Option to turn on heterogenous R-C assignment*/
 	char detailed_3D[STR_SIZE];
 	
+	char print_RC_model[STR_SIZE];
+	/* output file for the RC thermal model */
+	char RC_model_outfile[STR_SIZE];
 }global_config_t;
 
 /* 
