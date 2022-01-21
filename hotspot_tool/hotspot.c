@@ -753,7 +753,7 @@ for (i = 0; i < length_v; ++i)
   fprintf(stdout, "Dumping transient temperatures for init in file %s\n", model->config->all_transient_file);
   fprintf(stdout, "Unit\tSteady(Kelvin)\n");
   dump_temp(model, temp, model->config->all_transient_file);
-
+  dump_temp(model, model->block->t_vector, "transient_block.trace");
 
   /* cleanup	*/
   fclose(pin);

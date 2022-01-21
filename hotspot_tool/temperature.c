@@ -1831,7 +1831,10 @@ void dump_temp(RC_model_t *model, double *temp, char *file)
 	if (model->type == BLOCK_MODEL)
 		dump_temp_block(model->block, temp, file);
 	else if (model->type == GRID_MODEL)	
+	{
 		dump_temp_grid(model->grid, temp, file);
+  		dump_temp_block(model->block, model->block->t_vector, "transient_block.trace");
+	}
 	else fatal("unknown model type\n");	
 }
 
