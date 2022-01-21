@@ -347,7 +347,7 @@ struct block_model_t_st;
 struct grid_model_t_st;
 typedef struct RC_model_t_st
 {
-	union
+	struct//union //Sobhan: changed union with struct. This way we can keep a correcponding Block_model instance of a Grid_model in the RC_model
 	{
 		struct block_model_t_st *block;
 		struct grid_model_t_st *grid;
@@ -427,5 +427,8 @@ double calc_leakage(int mode, double h, double w, double temp);
 
 /* calculate average heatsink temperature for natural convection package model */
 double calc_sink_temp(RC_model_t *model, double *temp);
+
+/* Sobhan: convert grid model to an equivalent block model */
+RC_model_t *convert_grid2block(RC_model_t *model);
 
 #endif

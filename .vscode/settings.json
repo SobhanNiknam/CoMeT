@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "typeinfo": "cpp",
+        "*.ph": "cpp",
+        "*.tlh": "cpp",
+        "*.tcc": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp",
+        "istream": "cpp",
+        "locale": "cpp",
+        "atomic": "cpp",
+        "ostream": "cpp",
+        "chrono": "cpp"
+    }
+}

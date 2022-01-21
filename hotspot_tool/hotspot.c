@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 
   /*BU_3D: variable for heterogenous R-C model */
   int do_detailed_3D = FALSE; //BU_3D: do_detailed_3D, false by default
-  int do_print_RC_model = FALSE; //To write matrices of the RC model into a text file, false by default
+  int do_print_RC_model = FALSE; //Sobhan: To write matrices of the RC model into a text file, false by default
   if (!(argc >= 5 && argc % 2)) {
       usage(argc, argv);
       return 1;
@@ -429,6 +429,7 @@ for (i = 0; i < length_v; ++i)
   if(!strcmp(global_config.detailed_3D, "on")){
       do_detailed_3D = TRUE;
   }
+  /* Sobhan: check if RC model printing is on */
   if(!strcmp(global_config.print_RC_model, "on")){
       do_print_RC_model = TRUE;
   }
@@ -483,60 +484,67 @@ for (i = 0; i < length_v; ++i)
   if (do_transient)
     populate_C_model(model, flp);
 
-  if(do_print_RC_model)
-  {
-    if(!strcmp(global_config.t_outfile, NULLFILE))
-      fatal("Printing RC model can only be done when giving an output file name\n");
-    
-    FILE *fp;
-    fp = fopen(global_config.t_outfile, "w+");
-    fputs("This is testing for fputs...\n", fp);
-  
-		if (fp != NULL){
-
-			fputs((const char*)&model->block->base_n_units, fp);
-			//dumpFile.write((const char*)&rcModel.numberNodesAmbient, sizeof(int));
-			//dumpFile.write((const char*)&rcModel.numberThermalNodes, sizeof(int));
-
-			/*for(int unit = 0; unit < floorplan.getNumberFunctionalUnits(); unit++){
-				dumpFile << floorplan.units[unit].name << endl;
-			}
-
-			for(int row = 0; row < rcModel.Binv.rows(); row++){
-				for(int column = 0; column < rcModel.Binv.cols(); column++){
-					dumpFile.write((const char*)&rcModel.Binv(row,column), sizeof(double));
-				}
-			}
-
-			for(int row = 0; row < rcModel.Gamb.rows(); row++){
-				dumpFile.write((const char*)&rcModel.Gamb(row), sizeof(double));
-			}
-
-			for(int row = 0; row < rcModel.numberThermalNodes; row++){
-				dumpFile.write((const char*)&eigenValues[row], sizeof(double));
-			}
-
-			for(int row = 0; row < rcModel.numberThermalNodes; row++){
-				for(int column = 0; column < rcModel.numberThermalNodes; column++){
-					dumpFile.write((const char*)&eigenVectors[row][column], sizeof(double));
-				}
-			}
-
-			for(int row = 0; row < rcModel.numberThermalNodes; row++){
-				for(int column = 0; column < rcModel.numberThermalNodes; column++){
-					dumpFile.write((const char*)&eigenVectorsInv[row][column], sizeof(double));
-				}
-			}
-
-			if(dumpFile.good() == false){
-				cout << "Error: There was an error writing to the eigenvalues and eigenvectors dump file: \"" << fileName << "\"." << endl;
-				dumpFile.close();
-				exit(1);
-			}*/
-
-			fclose(fp);
-		}
+  //Sobhan: Convert the grid model to an equivalent block model 
+  if(model->type == GRID_MODEL)
+  { 
+    model->block = convert_grid2block(model);
   }
+
+  // if(do_print_RC_model)
+  // {
+  //   if(!strcmp(global_config.t_outfile, NULLFILE))
+  //     fatal("Printing RC model can only be done when giving an output file name\n");
+    
+  //   FILE *fp;
+  //   fp = fopen(global_config.t_outfile, "w+");
+  //   fputs("This is testing for fputs...\n", fp);
+  
+	// 	if (fp != NULL){
+
+	// 		fputs((const char*)&model->block->base_n_units, fp);
+  //     model->grid->layers[0].
+	// 		//dumpFile.write((const char*)&rcModel.numberNodesAmbient, sizeof(int));
+	// 		//dumpFile.write((const char*)&rcModel.numberThermalNodes, sizeof(int));
+
+	// 		/*for(int unit = 0; unit < floorplan.getNumberFunctionalUnits(); unit++){
+	// 			dumpFile << floorplan.units[unit].name << endl;
+	// 		}
+
+	// 		for(int row = 0; row < rcModel.Binv.rows(); row++){
+	// 			for(int column = 0; column < rcModel.Binv.cols(); column++){
+	// 				dumpFile.write((const char*)&rcModel.Binv(row,column), sizeof(double));
+	// 			}
+	// 		}
+
+	// 		for(int row = 0; row < rcModel.Gamb.rows(); row++){
+	// 			dumpFile.write((const char*)&rcModel.Gamb(row), sizeof(double));
+	// 		}
+
+	// 		for(int row = 0; row < rcModel.numberThermalNodes; row++){
+	// 			dumpFile.write((const char*)&eigenValues[row], sizeof(double));
+	// 		}
+
+	// 		for(int row = 0; row < rcModel.numberThermalNodes; row++){
+	// 			for(int column = 0; column < rcModel.numberThermalNodes; column++){
+	// 				dumpFile.write((const char*)&eigenVectors[row][column], sizeof(double));
+	// 			}
+	// 		}
+
+	// 		for(int row = 0; row < rcModel.numberThermalNodes; row++){
+	// 			for(int column = 0; column < rcModel.numberThermalNodes; column++){
+	// 				dumpFile.write((const char*)&eigenVectorsInv[row][column], sizeof(double));
+	// 			}
+	// 		}
+
+	// 		if(dumpFile.good() == false){
+	// 			cout << "Error: There was an error writing to the eigenvalues and eigenvectors dump file: \"" << fileName << "\"." << endl;
+	// 			dumpFile.close();
+	// 			exit(1);
+	// 		}*/
+
+	// 		fclose(fp);
+	// 	}
+  // }
 #if VERBOSE > 2
   debug_print_model(model);
 #endif

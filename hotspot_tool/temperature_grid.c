@@ -3251,6 +3251,7 @@ void slope_fn_grid(grid_model_t *model, double *v, grid_model_vector_t *p, doubl
 
 void compute_temp_grid(grid_model_t *model, double *power, double *temp, double time_elapsed)
 {
+  
   double t, h, new_h;
   int extra_nodes;
   grid_model_vector_t *p;
