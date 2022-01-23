@@ -347,11 +347,11 @@ struct block_model_t_st;
 struct grid_model_t_st;
 typedef struct RC_model_t_st
 {
-	struct//union //Sobhan: changed union with struct. This way we can keep a correcponding Block_model instance of a Grid_model in the RC_model
-	{
+	//union //Sobhan: remove union. This way we can keep a correcponding Block_model instance of a Grid_model in the RC_model
+	//{
 		struct block_model_t_st *block;
 		struct grid_model_t_st *grid;
-	};
+	//};
 	/* block model or grid model	*/
 	int type;
 	thermal_config_t *config;

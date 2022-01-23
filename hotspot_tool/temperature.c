@@ -638,28 +638,22 @@ RC_model_t *convert_grid2block(RC_model_t *model)
 	double *a = new_model->block->a;
 	double *inva = new_model->block->inva;	
 	double **c = new_model->block->c;
-	double *g_amb = new_model->block->g_amb;	
-	if(model_secondary){
-		b = dmatrix(nl*nr*nc+EXTRA+EXTRA_SEC, nl*nr*nc+EXTRA+EXTRA_SEC);
-		a = dvector(nl*nr*nc+EXTRA+EXTRA_SEC);
-		inva = dvector(nl*nr*nc+EXTRA+EXTRA_SEC);
-		c = dmatrix(nl*nr*nc+EXTRA+EXTRA_SEC, nl*nr*nc+EXTRA+EXTRA_SEC);
-		g_amb = dvector(nl*nr*nc+EXTRA+EXTRA_SEC);
-		zero_dmatrix(b, nl*nr*nc+EXTRA+EXTRA_SEC, nl*nr*nc+EXTRA+EXTRA_SEC);
-		zero_dvector(a, nl*nr*nc+EXTRA);
-		zero_dvector(inva, nl*nr*nc+EXTRA);
-		zero_dvector(g_amb, nl*nr*nc+EXTRA);
-	} else{
-		b = dmatrix(nl*nr*nc+EXTRA, nl*nr*nc+EXTRA);
-		a = dvector(nl*nr*nc+EXTRA);
-		inva = dvector(nl*nr*nc+EXTRA);
-		c = dmatrix(nl*nr*nc+EXTRA, nl*nr*nc+EXTRA);
-		g_amb = dvector(nl*nr*nc+EXTRA);
-		zero_dmatrix(b, nl*nr*nc+EXTRA, nl*nr*nc+EXTRA);
-		zero_dvector(a, nl*nr*nc+EXTRA);
-		zero_dvector(inva, nl*nr*nc+EXTRA);
-		zero_dvector(g_amb, nl*nr*nc+EXTRA);
-	}
+	double *g_amb = new_model->block->g_amb;
+	int extra_node;	
+	if(model_secondary)
+		extra_node = EXTRA+EXTRA_SEC;
+	else
+		extra_node = EXTRA;
+
+	b = dmatrix(nl*nr*nc+extra_node, nl*nr*nc+extra_node);
+	a = dvector(nl*nr*nc+extra_node);
+	inva = dvector(nl*nr*nc+extra_node);
+	c = dmatrix(nl*nr*nc+extra_node, nl*nr*nc+extra_node);
+	g_amb = dvector(nl*nr*nc+extra_node);
+	zero_dmatrix(b, nl*nr*nc+extra_node, nl*nr*nc+extra_node);
+	zero_dvector(a, nl*nr*nc+extra_node);
+	zero_dvector(inva, nl*nr*nc+extra_node);
+	zero_dvector(g_amb, nl*nr*nc+extra_node);
 
  	/* for each grid cell	*/
   	for(n=0; n < nl; n++)
@@ -802,6 +796,7 @@ RC_model_t *convert_grid2block(RC_model_t *model)
   
 	/* load the matrices A, B, and G_amb for the package nodes	*/
   	int extra_idx = nl*nr*nc;
+	model->block->n_units = nl*nr*nc + extra_node;
   	/* sink outer north/south	*/
   	b[extra_idx+SINK_N][extra_idx+SINK_N] = 1.0/(pk->r_hs_per + pk->r_amb_per);
   	b[extra_idx+SINK_C_N][extra_idx+SINK_N] = -1.0/(pk->r_hs2_y + pk->r_hs);
